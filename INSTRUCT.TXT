@@ -1,7 +1,3 @@
-
-
-
-
                                  INSTRUCTIONS
 
                                      FOR
@@ -11,90 +7,34 @@
                             |____________________|
 
                        A Text & Sound Adventure Fantasy
-
-                          Programmed by Scott Miller
-
-
-                         An Apogee Software Production
                          -----------------------------
-
-
-
-
-
-PLEASE NOTE THAT BEYOND THE TITANIC IS A SHAREWARE GAME.
-                                         ---------
-
-The author asks that those who enjoy the game please pay $5 or $10 to help
-compensate the effort that went into programming Beyond the Titanic.  This
-small fee will also encourage the author to continue making new games, like
-the recently released Supernova and Kingdom of Kroz.
-
-This payment will also register the payer for telephone support and clues.
-
-Please make checks payable to:
-
-                Scott Miller              (214) 240-0614
-                4206 Mayflower Dr.
-                Garland, TX  75043
-
-Please support the SHAREWARE concept, it benefits you the most.
-
-Thank you and enjoy the game...
-
-Scott Miller
-
-
-
-
 
 
 The STORY
 ------------------------------------------------------------------------------
 
-    As the game begins you find yourself standing on board the Titanic, on her
+As the game begins you find yourself standing on board the Titanic, on her
 maiden voyage.  Of course, that particular voyage was never completed!
-    Your goal is to survive and somehow get back to your home in the United
+
+Your goal is to survive and somehow get back to your home in the United
 States.
-    Most of your time will be spent solving numerous problems and dangers that
+
+Most of your time will be spent solving numerous problems and dangers that
 arise, like starvation and drowning.  If you've played any of Infocom's famous
 text games you will notice that Beyond the Titanic is quite similar to Zork
 and Planetfall.
-    Hints:  Examine everything and make a map as you move through the many
+
+Hints:  Examine everything and make a map as you move through the many
 game locations.  There are not any puzzles that cannot be solved logically;
 apply an "If I were really there, I would do this..." type of attitude.
-    To add to the game's realism sound effects are used throughout the game.
 
+To add to the game's realism sound effects are used throughout the game.
 
-
-
-
-LOADING
-------------------------------------------------------------------------------
-
-Game setup for single disk drive:
-
-1)  Insert the GAME disk.
-2)  Type in BEYOND and press the <enter> button.
-3)  When the "Do you have a colr screen?" question appears, press Y or N.
-4)  When the "How many disk drives do you have?" question appears, press
-    the number 1.
-5)  The game will begin.
-
-Game setup for two disk drives:
-
-1)  Insert the GAME disk into drive A:
-2)  Insert your SAVE/RESTORE disk into drive B:
-3)  Type in BEYOND and press the <enter> button.
-4)  When the "Do you have a colr screen?" question appears, press Y or N.
-4)  When the "How many disk drives do you have?" question appears, press
-    the number 2.
-6)  The game will begin.
 
 The VERBS
 ------------------------------------------------------------------------------
 
-    Beyond the Titanic has a vocabulary of over 750 words--more than most
+Beyond the Titanic has a vocabulary of over 750 words--more than most
 text adventures sold commercially.  Here is a sampling of the verbs
 understood by the game's parser.
 EXAMINE (or EX for short)
@@ -116,7 +56,6 @@ SLEEP                           FLY
 DANCE                           FALL
 
 
-
 Example structures:
 
 TIE [object] (TO, AROUND) [object] - usually used with a rope.
@@ -136,12 +75,10 @@ Example Sentences:
 >> SHOOT THE CREATURE WITH THE GUN PLEASE, THEN RUN SOUTH!
 
 
-
-
 The COMMANDS
 ------------------------------------------------------------------------------
 
-    Here's a list of the major commands you will need to know in order to play
+Here's a list of the major commands you will need to know in order to play
 Beyond the Titanic.
 
 QUIT - ends the current game.
@@ -159,26 +96,35 @@ ROOM DESCRIPTION (or RD) - toggles between full room descriptions or brief
     room descriptions.
 
 
-
-
-
-
-
 MISCELLANEOUS
 ------------------------------------------------------------------------------
 
-    Beyond the Titanic only recognizes the first SEVEN letters of any word or
+Beyond the Titanic only recognizes the first SEVEN letters of any word or
 command.  (Note: Infocom games only use the first SIX letters.)
-    The word AND is not understood.  You cannot say, for example, GET GUN
+
+The word AND is not understood.  You cannot say, for example, GET GUN
 AND ROPE, or PUT ROPE AND KNIFE IN SACK.
-    With the verbs GET and DROP you may refer to every object by saying
+
+With the verbs GET and DROP you may refer to every object by saying
 GET ALL or DROP ALL.  The word ALL is not accepted anywhere else.
-    It is a good idea to draw a map as you find new rooms in the game.
+
+It is a good idea to draw a map as you find new rooms in the game.
 Without a map it is easy to get lost, or it might be difficult to find a
 room you need to get to in a hurry.
 
-*** END OF FILE ***
+--
+This file is free software: you may copy, redistribute and/or modify it  
+under the terms of the GNU General Public License as published by the Free 
+Software Foundation, either version 3 of the License, or (at your option) any 
+later version.  
 
+This file is distributed in the hope that it will be useful, but WITHOUT ANY 
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR 
+A PARTICULAR PURPOSE. See the GNU General Public License for more details.  
 
-
-
+You should have received a copy of the GNU General Public License along with 
+this program; if not, see https://gnu.org/licenses or write to:
+  Free Software Foundation, Inc.
+  51 Franklin Street, Fifth Floor
+  Boston, MA 02110-1301
+  USA
