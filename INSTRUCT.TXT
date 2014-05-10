@@ -30,6 +30,10 @@ apply an "If I were really there, I would do this..." type of attitude.
 
 To add to the game's realism sound effects are used throughout the game.
 
+If the game is played perfectly, it will take the you at least 350 moves to 
+solve everything and return home (San Francisco.) On average the game will 
+take over 2500 moves to complete!
+
 
 The VERBS
 ------------------------------------------------------------------------------
