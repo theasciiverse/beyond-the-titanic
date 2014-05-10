@@ -1,21 +1,46 @@
 {//-------------------------------------------------------------------------}
 {/*                                                                         }
+{Copyright (C) 2014 Jason Self <j@jxself.org>                               }
+{                                                                           }
+{This file is free software: you may copy, redistribute and/or modify it    }
+{under the terms of the GNU Affero General Public License as published by   }
+{the Free Software Foundation, either version 3 of the License, or (at your }
+{option) any later version.                                                 }
+{                                                                           }
+{This file is distributed in the hope that it will be useful, but WITHOUT   }
+{ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or      }
+{FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License}
+{for more details.                                                          }
+{                                                                           }
+{You should have received a copy of the GNU Affero General Public License   }
+{along with this program; if not, see https://gnu.org/licenses or write to: }
+{  Free Software Foundation, Inc.                                           }
+{  51 Franklin Street, Fifth Floor                                          }
+{  Boston, MA 02110-1301                                                    }
+{  USA                                                                      }
+{                                                                           }
+{This file incorporates work covered by the following copyright and         }
+{permission notice:                                                         }
+{                                                                           }
 {Copyright (C) 1990, 2009 - Apogee Software, Ltd.                           }
 {                                                                           }
-{This file is part of Supernova.  Supernova is free software; you can       }
-{redistribute it and/or modify it under the terms of the GNU General Public }
-{License as published by the Free Software Foundation; either version 2     }
-{of the License, or (at your option) any later version.                     }
+{This file is part of Beyond The Titanic. Beyond The Titanic is free        }
+{software; you can redistribute it and/or modify it under the terms of the  }
+{GNU General Public License as published by the Free Software Foundation;   }
+{either version 3 of the License, or (at your option) any later version.    }
 {                                                                           }
-{This program is distributed in the hope that it will be useful,            }
-{but WITHOUT ANY WARRANTY; without even the implied warranty of             }
-{MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                       }
+{This program is distributed in the hope that it will be useful, but WITHOUT}
+{ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or      }
+{FITNESS FOR A PARTICULAR PURPOSE.                                          }
 {                                                                           }
 {See the GNU General Public License for more details.                       }
 {                                                                           }
 {You should have received a copy of the GNU General Public License          }
-{along with this program; if not, write to the Free Software                }
-{Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.}
+{along with this program; if not, write to:                                 }
+{  Free Software Foundation, Inc.                                           }
+{  51 Franklin Street, Fifth Floor                                          }
+{  Boston, MA 02110-1301                                                    }
+{  USA                                                                      }
 {                                                                           }
 {Original Source: 1990 Scott Miller                                         }
 {Prepared for public release: 03/19/09 - Joe Siegler, Apogee Software, Ltd. }
@@ -27,6 +52,8 @@
 {*  These are misc procedures and functions used with the main file: AdGame *}
 {*                        Copyright 1984 Pending                            *}
 {****************************************************************************}
+
+
 
 procedure SA;
    begin FlagSA:='s' end;
@@ -42,17 +69,17 @@ function Here(noun : integer): Boolean;
      else Here:=False
    end;
 
-overlay procedure Crazy;
+procedure Crazy;
    begin SA;
     if(random(2)=1)then RL(107+random(7))else RL(300+random(6));
    end;
 
-overlay procedure DEAD;
-    var b,c:byte;
-    FileName : file;
+procedure DEAD;
+    var FileName : file;
+    var x,b,c:Integer;
    begin SA; NoSound;
      gotoxy(1,25);for x:=1 to 7 do writeln;
-     Textcolor(1);Textbackground(m9);
+     Textcolor(1);TextBackground(m9);
      gotoxy(1,18);
      write('*********************************************************',
            '***********************');writeln;
@@ -64,14 +91,17 @@ overlay procedure DEAD;
            '***********************');writeln;
      TextColor(m0);gotoxy(32,20);writeln('YOU HAVE DIED!!!');
      Textcolor(m2);Textbackground(0);
-     for c:=700 downto 20 do for b:=70 downto 1 do sound(b*c);nosound;
+     for c:=700 downto 20 do
+        for b:=70 downto 1 do sound(b*c);nosound;
      close(Rooms1);close(rooms2);close(special1);close(special2);close(line1);
      gotoxy(1,23);DelLine;DelLine;writeln;write('Do you wish to play again? ');
-     read(kbd,flag);
+     flag:=ReadKey;
      if(upcase(flag)<>'N')then
       begin
        writeln('Restarting...');window(1,1,80,25);
-       assign(rooms1,'BEYOND.com');execute(rooms1)end
+       assign(rooms1,'BEYOND.com');
+       { execute(rooms1); }
+       end
      else
       begin
        textcolor(7);
@@ -84,14 +114,14 @@ overlay procedure DEAD;
        delay(2000);
        assign(FileName,'MENU.COM');
        {$I-}
-       execute(FileName);
+       {execute(FileName);}
        {$I+}
        if IOResult <> 0 then HALT;
       end
    end;
 
-overlay procedure Home;
-  var b,c:byte;
+procedure Home;
+  var b,c,x,y,o:Integer;
    begin SA;
      gotoxy(1,25);for x:=1 to 7 do writeln;
      Textcolor(25);Textbackground(m7);
@@ -122,12 +152,12 @@ overlay procedure Home;
      writeln('Reboot your computer to regain control...')
   end;
 
-overlay procedure Say(o : integer; p : str14);
+procedure Say(o : integer; p : str14);
    begin
      writeln('The ',n[o,1],' is already ',p,'.'); SA
    end;
 
-overlay procedure Diagnose;
+procedure Diagnose;
    begin
      RL(191);
      if((tic>42)and not(en('c')))or((tic>146)and not(en('n')))or(en('r'))then
@@ -139,7 +169,7 @@ overlay procedure Diagnose;
      else RL(207)
    end;
 
-overlay procedure Monster(var NewRm : integer);
+procedure Monster(var NewRm : integer);
    begin
     if(NewRm=MnRm)and(MnRm=25)then begin Attack:=False;RL(384)end else
     if(NewRm<>35)or not(en('v'))then
@@ -153,7 +183,7 @@ overlay procedure Monster(var NewRm : integer);
     else begin RL(383);Attack:=False end
    end;
 
-overlay procedure DescribeRm;
+procedure DescribeRm;
    var o : integer;
   procedure s(r : str14);
      begin TextColor(m8);writeln(r);TextColor(m2);loc:=r;end;
@@ -232,7 +262,7 @@ if((en('a'))and(here(29)))or not(Prm in [6..24])then begin
     else RL(54)
    end;  {of DescribeRm}
 
-overlay procedure SAVE;
+procedure SAVE;
    begin SA; for x:=1 to 24 do writeln; nosound;
    window(1,3,80,25);
    gotoxy(1,4);
@@ -240,16 +270,18 @@ overlay procedure SAVE;
     writeln('Remove the GAME disk and insert your SAVE/RESTORE disk ',
             'in drive A:')else
     writeln('Make sure your SAVE/RESTORE disk is in drive B:');
-   writeln('  (Press any key to continue...)');read(kbd,flag);
+   writeln('  (Press any key to continue...)');flag:=ReadKey;
    writeln;writeln;
-   write('Save under what name? ');BufLen:=8;readln(input);
+   write('Save under what name? ');
+   {BufLen:=8;}
+   readln(input);
    while pos(' ',input)>0 do delete(input,pos(' ',input),1);
    while pos('.',input)>0 do delete(input,pos('.',input),1);
    if(input='')then input:='LastRoom';
    writeln;writeln;input:=Drive+input;
    writeln('If your SAVE/RESTORE disk is in drive ',Drive,
             ' then press any key to start.');
-   read(kbd,flag);
+   flag:=ReadKey;
    with DiskSave do
     begin
      aInven:=Inven;aKitSet:=KitSet;aCabiSet:=CabiSet;aPanelCon:=PanelCon;
@@ -283,7 +315,7 @@ overlay procedure SAVE;
            ' SAVED to disk under the name ''',input,'.''');
    if(Drive='A:')then begin writeln;
     writeln('Remove the SAVE/RESTORE disk and insert your GAME disk.')end;
-   writeln('  (Press any key to continue...)');read(kbd,flag);
+   writeln('  (Press any key to continue...)');flag:=ReadKey;
    writeln;writeln;
    if(Verb<>54)then writeln('You may now resume your game...');
    if(Line='')then Line:='look';Tic:=Tic-2;Back:=True;
@@ -291,7 +323,7 @@ overlay procedure SAVE;
    window(1,2,80,25)
    end; {of Save}
 
-overlay procedure RESTORE;
+procedure RESTORE;
  function Exist:Boolean;
  begin
  assign(GameSave,input+'.a');
@@ -306,16 +338,18 @@ overlay procedure RESTORE;
     writeln('Remove the GAME disk and insert your SAVE/RESTORE disk ',
             'in drive ',Drive)else
     writeln('Make sure your SAVE/RESTORE disk is in drive B:');
-   writeln('  (Press any key to continue...)');read(kbd,flag);
+   writeln('  (Press any key to continue...)');flag:=ReadKey;
    writeln;writeln;
-   write('Which file name do you want to RESTORE? ');BufLen:=8;readln(input);
+   write('Which file name do you want to RESTORE? ');
+   {BufLen:=8;}
+   readln(input);
    while pos(' ',input)>0 do delete(input,pos(' ',input),1);
    while pos('.',input)>0 do delete(input,pos('.',input),1);
    if(input='')then input:='LastRoom';
    writeln;writeln;input:=Drive+input;
    writeln('If your SAVE/RESTORE disk is now in drive ',Drive,
            ' then press any key to start.');
-   read(kbd,flag);
+   flag:=ReadKey;
    if Exist then
     begin
      close(GameSave);
@@ -352,7 +386,7 @@ overlay procedure RESTORE;
              ' RESTORED from the file ''',input,'.''');
      if(Drive='A:')then begin writeln;
       writeln('Remove the SAVE/RESTORE disk and insert your GAME disk.')end;
-     writeln('  (Press any key to continue...)');read(kbd,flag);
+     writeln('  (Press any key to continue...)');flag:=ReadKey;
     end
    else
     begin writeln;TextColor(28);
@@ -362,7 +396,7 @@ overlay procedure RESTORE;
      if(Drive='A:')then
       writeln('Put your GAME disk back in the disk drive and press any key.')
      else writeln('  (Press any key to continue...)');
-     read(kbd,flag);
+     flag:=ReadKey;
     end;
    writeln;writeln;writeln('You may now resume you game...');
    if(Line='')then Line:='look';Tic:=Tic-2;Back:=True;
@@ -370,7 +404,7 @@ overlay procedure RESTORE;
    window(1,2,80,25)
    end; {of Restore}
 
-overlay procedure Vanish(o : integer);
+procedure Vanish(o : integer);
    begin SA;
      inven:=inven-[o];
      r[o]:=Null;
@@ -388,7 +422,7 @@ overlay procedure Vanish(o : integer);
      if(o=RopeCon)and not(Verb in[9,14])then RopeCon:=Null
    end;
 
-overlay procedure Play( Start, Stop, Wait: integer);
+procedure Play( Start, Stop, Wait: integer);
    var x : integer;
    begin
     if(Start<=Stop)then
@@ -400,7 +434,7 @@ overlay procedure Play( Start, Stop, Wait: integer);
     if(Prm in[59..68])then sound(20)else nosound
    end; {of Play}
 
-overlay procedure DropAll;
+procedure DropAll;
    var o : integer;
    begin
      for o:= 0 to NMax do
@@ -420,7 +454,7 @@ function FlasOff : Boolean;
        else FlasOff:=True;
    end;
 
-procedure MoveTo(NewRm : integer);
+procedure  MoveTo(NewRm : integer);
  var o : integer;
  begin
    if(57 in inven)and(ropecon<>Null)and not(ropecon in inven)
@@ -495,7 +529,7 @@ case Prm of
 end;
 case Prm of
   5,6,9,10:if(random(9)=2)then RL(268);
-  7..40:if(here(84))and(random(20)=2)then RL(269)
+  7,8,11..40:if(here(84))and(random(20)=2)then RL(269)
         else if(random(75)=2)then RS(36)
         else if(Prm in[5..22])and(random(33)=2)then
          begin RL(265);play(6500,6950,0)end;
@@ -521,10 +555,13 @@ function Present : Boolean;
     else Present:=true
    end;
 
-overlay procedure Initialize;
+procedure Initialize;
+ var S: string;
+
  procedure Cn(S : Str80);
  begin
-  gotoxy(40-(length(S)div 2),wherey);writeln(S);
+  gotoxy(40-(length(S)div 2),wherey);
+  writeln(S);
  end;
   begin
    textcolor(15);
@@ -532,7 +569,7 @@ overlay procedure Initialize;
    writeln('But first, two simple questions:');
    gotoxy(1,4);write('Are you using a COLOR screen (Y/N)? ');
    nosound; play(72,80,45);
-   read(kbd,flag); play(2500,2490,6);
+   flag:='Y'; play(2500,2490,6);
    m0:=20;m1:=14;m2:=11;m3:=4;m4:=15;m5:=28;m6:=1;m7:=4;m8:=10;m9:=10;
    if upcase(flag)='N' then
     begin
@@ -541,7 +578,7 @@ overlay procedure Initialize;
     end else writeln('Yes, I do have a color screen.');writeln;
    write('How many disk drives do you have (1/2)? ');
    play(80,88,30);
-   read(kbd,flag);play(2500,2490,6);
+   flag:='2';play(2500,2490,6);
    Drive:='B:';
    if(upcase(flag)='O')or(flag='1')then
     begin Drive:='A:';writeln('I have ONE disk drive.')end else
@@ -554,7 +591,7 @@ overlay procedure Initialize;
    cn('Written and Programmed by Scott Miller');
    textcolor(11);
    gotoxy(32,24);textcolor(7);
-   write('Press any key...');read(kbd,flag);clrscr;
+   write('Press any key...');{flag:=ReadKey;}clrscr;
 
    {                      *** SHAREWARE SCREEN ***                            }
 
@@ -583,15 +620,15 @@ overlay procedure Initialize;
    textcolor(7);
    writeln('Thanks, enjoy the game...');
    gotoxy(23,25);
-   delay(12000);
-   while keypressed do read(kbd,flag);
+   {delay(12000);}
+   while keypressed do flag:=ReadKey;
    write('Press any key to start the game...');
-   read(kbd,flag);
-   while keypressed do read(kbd,flag);
+   {flag:=ReadKey;}
+   while keypressed do flag:=ReadKey;
    clrscr;
    {                      ************************                            }
-
-   gotoxy(1,25);
+   window(1,2,80,25);
+   gotoxy(1,1);
    TextColor(m1);
 cn('APRIL 14, 1912    11:43 PM');
 cn('You never knew the black canvas of the night was so full'+
@@ -632,15 +669,47 @@ Verbose     :=true;
 Attack      :=False;
 YearDial    :=135;
 DayDial     :=60;
-assign(rooms1,'rooms1');assign(rooms2,'rooms2');
-assign(special1,'special1');assign(special2,'special2');assign(line1,'line');
-reset(rooms1);reset(rooms2);reset(special1);reset(special2);reset(line1);
+assignfile(rooms1,'ROOMS1');
+assignfile(rooms2,'ROOMS2');
+assignfile(special1,'SPECIAL1');
+assignfile(special2,'SPECIAL2');
+assignfile(line1,'LINE');
+
+getdir(0,S);
+chdir(S);
+{Writeln ('Current directory is : ',S);}
+
+
+{$I+}
+
+{filemode:=1;}
+reset(rooms1);
+
+reset(rooms2);
+reset(special1);
+reset(special2);
+reset(line1);
+
+
 Str(Random(9998)+1,Code);
-   DescribeRm; writeln; randomize;
-   gotoxy(1,1);TextBackGround(m6);
-   for x:=1 to 80 do write(' ');writeln;TextColor(m4);
-   gotoxy(4,1);writeln('Move');gotoxy(68,1);writeln('Score');TextColor(m2);
-   TextBackGround(0); Window(1,2,80,25);
+
+   DescribeRm;
+   writeln;
+   randomize;
+   gotoxy(1,1);
+   TextBackGround(m6);
+   for x:=1 to 80 do write(' ');
+   writeln;
+   TextColor(m4);
+
+   gotoxy(4,1);
+   writeln('Move');
+
+   gotoxy(68,1);
+   writeln('Score');
+   TextColor(m2);
+   TextBackGround(0);
+   Window(1,2,80,25);
+
   end; {of Initialize}
 {***************************** END OF COMMANDS *****************************}
-

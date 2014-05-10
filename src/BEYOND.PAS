@@ -1,21 +1,48 @@
+{$mode objfpc}
+
 {//-------------------------------------------------------------------------}
 {/*                                                                         }
+{Copyright (C) 2014 Jason Self <j@jxself.org>                               }
+{                                                                           }
+{This file is free software: you may copy, redistribute and/or modify it    }
+{under the terms of the GNU Affero General Public License as published by   }
+{the Free Software Foundation, either version 3 of the License, or (at your }
+{option) any later version.                                                 }
+{                                                                           }
+{This file is distributed in the hope that it will be useful, but WITHOUT   }
+{ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or      }
+{FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License}
+{for more details.                                                          }
+{                                                                           }
+{You should have received a copy of the GNU Affero General Public License   }
+{along with this program; if not, see https://gnu.org/licenses or write to: }
+{  Free Software Foundation, Inc.                                           }
+{  51 Franklin Street, Fifth Floor                                          }
+{  Boston, MA 02110-1301                                                    }
+{  USA                                                                      }
+{                                                                           }
+{This file incorporates work covered by the following copyright and         }
+{permission notice:                                                         }
+{                                                                           }
 {Copyright (C) 1990, 2009 - Apogee Software, Ltd.                           }
 {                                                                           }
-{This file is part of Supernova.  Supernova is free software; you can       }
-{redistribute it and/or modify it under the terms of the GNU General Public }
-{License as published by the Free Software Foundation; either version 3     }
-{of the License, or (at your option) any later version.                     }
+{This file is part of Beyond The Titanic. Beyond The Titanic is free        }
+{software; you can redistribute it and/or modify it under the terms of the  }
+{GNU General Public License as published by the Free Software Foundation;   }
+{either version 3 of the License, or (at your option) any later version.    }
 {                                                                           }
-{This program is distributed in the hope that it will be useful,            }
-{but WITHOUT ANY WARRANTY; without even the implied warranty of             }
-{MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                       }
+{This program is distributed in the hope that it will be useful, but WITHOUT}
+{ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or      }
+{FITNESS FOR A PARTICULAR PURPOSE.                                          }
 {                                                                           }
 {See the GNU General Public License for more details.                       }
 {                                                                           }
 {You should have received a copy of the GNU General Public License          }
-{along with this program; if not, write to the Free Software                }
-{Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.}
+{along with this program; if not, write to:                                 }
+{  Free Software Foundation, Inc.                                           }
+{  51 Franklin Street, Fifth Floor                                          }
+{  Boston, MA 02110-1301                                                    }
+{  USA                                                                      }
 {                                                                           }
 {Original Source: 1990 Scott Miller                                         }
 {Prepared for public release: 03/19/09 - Joe Siegler, Apogee Software, Ltd. }
@@ -30,6 +57,7 @@
 
 { Last modified: July 23, 1987 }
 
+uses crt,sysutils;
 const
      Q        = '#';
      VMax     = 65;
@@ -127,20 +155,20 @@ var
 
 
 
-{$Ia:AdParser.PAS}{  <--- Loads in sentence logic.    <*********************}
+{$I AdParser.PAS}{  <--- Loads in sentence logic.    <*********************}
 
 
-{$Ia:Commands.PAS}{  <--- Loads in misc. procedures.  <*********************}
+{$I Commands.PAS}{  <--- Loads in misc. procedures.  <*********************}
 
 
-{$Ia:WordList.PAS }{  <----- CALLS UP THE VERBS & NOUNS <*******************}
+{$I WordList.PAS }{  <----- CALLS UP THE VERBS & NOUNS <*******************}
 
 
-{$Ia:Objects.PAS }{   <----- CALLS UP THE VERBS & NOUNS <*******************}
+{$I Objects.PAS }{   <----- CALLS UP THE VERBS & NOUNS <*******************}
 
 
 {===================}
-overlay procedure DefaultAnswers1;
+procedure DefaultAnswers1;
 var o : integer;
 begin
 
@@ -230,7 +258,7 @@ CASE VERB OF
   end {of case}
 end;  {of DefaultAnswers1}
 {-------------------}
-overlay procedure DefaultAnswers2;
+procedure DefaultAnswers2;
 var o : integer;
 begin
 
@@ -296,7 +324,7 @@ CASE VERB OF
   end {of case}
 end;  {of DefaultAnswers2}
 {-------------------}
-overlay procedure DefaultAnswers3;
+  procedure DefaultAnswers3;
 var o : integer;
 begin
 
@@ -369,7 +397,7 @@ CASE VERB OF
   end {of case}
 end;  {of DefaultAnswers3}
 {-------------------}
-overlay procedure DefaultAnswers4;
+  procedure DefaultAnswers4;
 var o : integer;
 begin
 
@@ -395,9 +423,9 @@ CASE VERB OF
                50,65,73,74,80,79,30])then RL(93) else RL(94);
 
 54         :begin write('Would you like to SAVE your game first (Y or N)?  ');
-             read(kbd,flag);if(upcase(flag)<>'N')then SAVE else writeln('No.');
+             flag:=ReadKey;if(upcase(flag)<>'N')then SAVE else writeln('No.');
              write('Are you still sure you want to quit? ');
-             read(kbd,flag);if(upcase(flag)='Y')then
+             flag:=ReadKey;if(upcase(flag)='Y')then
               begin RL(367);delay(999);window(1,1,80,25);clrscr;close(rooms1);
                close(rooms2);close(special1);close(special2);close(line1);
               HALT end else RL(264)end;
@@ -453,7 +481,7 @@ CASE VERB OF
   end   {of CASE.}
 end;    {of DefaultAnswers4}
 {-------------------}
-overlay procedure DefaultAnswers5;
+  procedure DefaultAnswers5;
 var o: integer;
 begin
 
@@ -495,7 +523,7 @@ CASE VERB OF
   end {of case}
 end;  {of DefaultAnswers5}
 {-------------------}
-overlay procedure DefaultAnswers6;
+  procedure DefaultAnswers6;
 var o : integer;
 begin
 
@@ -559,7 +587,7 @@ CASE VERB OF
   end {of case}
 end;  {of DefaultAnswers6}
 {-------------------}
-overlay procedure DefaultAnswers7;
+  procedure DefaultAnswers7;
 var o : integer;
 begin
 
@@ -610,7 +638,7 @@ CASE VERB OF
   end {of case}
 end;  {of DefaultAnswers7}
 {-------------------}
-overlay procedure DefaultAnswers8;
+  procedure DefaultAnswers8;
 var o : integer;
 begin
 
@@ -670,7 +698,7 @@ CASE VERB OF
   end {of case}
 end;  {of DefaultAnswers8}
 {-------------------}
-overlay procedure DefaultAnswers9;
+  procedure DefaultAnswers9;
 var o : integer;
 begin
 
@@ -712,7 +740,7 @@ CASE VERB OF
   end {of case}
 end;  {of DefaultAnswers9}
 {-------------------}
-overlay procedure DefaultAnswers10;
+  procedure DefaultAnswers10;
 var o : integer;
 begin
 
@@ -756,11 +784,13 @@ CASE VERB OF
              else Crazy
             else Crazy;
 
-61         :begin RL(245);read(kbd,flag);
+61         :begin RL(245);flag:=ReadKey;
              if(upcase(flag)<>'N')then
               begin RL(380);delay(999);window(1,1,80,25);clrscr;close(rooms1);
                close(rooms2);close(special1);close(special2);close(line1);
-               assign(rooms1,'BEYOND.com');execute(rooms1)end
+               assign(rooms1,'BEYOND.com');
+               {execute(rooms1)}
+               end
              else RL(264)
             end;
 
@@ -769,7 +799,7 @@ CASE VERB OF
   end {of case}
 end;  {of DefaultAnswers10}
 {===================}
-overlay procedure SpecialAnswers1;
+  procedure SpecialAnswers1;
 
 begin
 FlagSA:='r';
@@ -847,7 +877,7 @@ end {of case}
 else SA
 end; {of SP1}
 {-------------------}
-overlay procedure SpecialAnswers2;
+  procedure SpecialAnswers2;
 
 begin
 FlagSA:='r';
@@ -861,7 +891,7 @@ Case Prm of
 
 6       :case verb of
    46   :moveto(5);
-  43..52:if FlasOff then RL(14)
+  43,44,45,47..52:if FlasOff then RL(14)
          else case verb of
            43:begin Ox:=0;RL(286);moveto(7);end;
            45:moveto(9); 49:moveto(8);
@@ -889,7 +919,7 @@ Case Prm of
 
 8       :case verb of
    48,58:if FlasOff then RL(14) else moveto(6);
-  43..52:if FlasOff then RL(14);
+  43..47,49..52:if FlasOff then RL(14);
   11:if(noun in [46,79])then RS(12)
          else if(noun in [15,30])then RL(28);
    38 :if(noun=46)then begin SA;writeln('It feels jagged.');end;
@@ -905,7 +935,7 @@ Case Prm of
 10        :case verb of
    50,58 :if FlasOff then RL(14)
          else moveto(9);
-   43..52:if FlasOff then RL(14);
+   43..49,51..52:if FlasOff then RL(14);
   19,2:if(noun in[17,80])then begin RL(0);DEAD;end;
            end; {of 10}
 
@@ -913,7 +943,7 @@ end {of case}
 else SA
 end; {of SP2}
 {-------------------}
-overlay procedure SpecialAnswers3;
+  procedure SpecialAnswers3;
 
 begin
 FlagSA:='r';
@@ -923,7 +953,7 @@ Case Prm of
 14       :case verb of
    46,48 :if FlasOff then RL(14)
           else if(verb=46)then moveto(11) else moveto(15);
-  43..52 :if FlasOff then RL(14);
+  43..45,47,49..52 :if FlasOff then RL(14);
           end; {of 14}
 
 15     :case Verb of
@@ -971,7 +1001,7 @@ end  {of Case}
 else SA
 end; {of SP3}
 {-------------------}
-overlay procedure SpecialAnswers4;
+  procedure SpecialAnswers4;
 
 begin
 FlagSA:='r';
@@ -1014,7 +1044,7 @@ Case Prm of
 23      :case verb of
    46,50 :if(flasoff)then RL(14)else moveto(21);
    43,48 :if(flasoff)then RL(14)else moveto(22);
-   44..49:RL(258);
+   44,45,47,49:RL(258);
    26,27 :if(noun=26)then
            if(en('l'))then Say(26,'open')
            else begin RL(98);Ev:=Ev+['l'];p[23]:=p[23]+[69];end;
@@ -1045,7 +1075,7 @@ end   {of case}
 else SA
 end;  {of SP4}
 {-------------------}
-overlay procedure SpecialAnswers5;
+  procedure SpecialAnswers5;
 
 begin
 FlagSA:='r';
@@ -1128,7 +1158,7 @@ end {of case}
 else SA
 end; {of SP5}
 {-------------------}
-overlay procedure SpecialAnswers6;
+  procedure SpecialAnswers6;
 
 begin
 FlagSA:='r';
@@ -1158,7 +1188,7 @@ Case Prm of
                n[66,4]:='red';
                    end;
         0..1111   :begin writeln;RS(31);DEAD;end;
-        1112..2110:begin writeln;RS(32);DEAD;end;
+        1112..1932,1934..2110:begin writeln;RS(32);DEAD;end;
         2680..3789:begin writeln;RS(33);DEAD;end
              else  begin writeln;RS(34);DEAD;end;
        end; {of YearDial case}
@@ -1202,7 +1232,7 @@ end  {of case}
 else SA
 end; {of SP6}
 {-------------------}
-overlay procedure SpecialAnswers7;
+  procedure SpecialAnswers7;
 
 begin
 FlagSA:='r';
@@ -1256,7 +1286,7 @@ Case Prm of
     45  :moveto(39);
     46  :moveto(37);
     57  :if(noun=12)then RL(215);
-   0..99:if(noun=28)or(noun2=28)then
+   0..42,44,47,49,50-56,59..99:if(noun=28)or(noun2=28)then
           begin RS(35);RL(220);p[40]:=p[40]+[48];moveto(40);Ev:=Ev-['g'];
            if(MnRm=Prm)then begin RS(79);DEAD end
           end;
@@ -1282,7 +1312,7 @@ end  {of case}
 else SA
 end; {of SP7}
 {-------------------}
-overlay procedure SpecialAnswers8;
+  procedure SpecialAnswers8;
 
 begin
 FlagSA:='r';
@@ -1316,14 +1346,14 @@ Case Prm of
     43  :moveto(43);
     46  :moveto(47);
     45  :begin RL(274);Rx:=0;moveto(46);end;
-  43..51,2,19:if(noun=Null)or(noun in[41,79])then RL(275);
+  44,47..51,2,19:if(noun=Null)or(noun in[41,79])then RL(275);
        end;
 
 45     :case verb of
     44  :moveto(49);
     46  :begin RL(274);Rx:=8;moveto(46);end;
     45  :begin Rx:=9;RL(274);moveto(46);end;
-  43..51,2,19:if(noun=Null)or(noun in[41,79])then RL(275);
+  43,47..51,2,19:if(noun=Null)or(noun in[41,79])then RL(275);
         end;
 
 46     :case verb of
@@ -1337,20 +1367,20 @@ Case Prm of
           if(Rx=8)then moveto(45);
           if(Rx<1)then moveto(44);
          end;
-  43..51,2,19:if(noun=Null)or(noun in[41,79])then RL(275);
+  43,44,47..51,2,19:if(noun=Null)or(noun in[41,79])then RL(275);
         end;
 
 47     :case verb of
   46,52,2,19:begin if(random(2)=1)then begin RS(37);DropAll;moveto(48)end
                    else begin RL(277);moveto(48)end;end;
     45  :moveto(44);
-  43..50:RL(278);
+  43,44,47..50:RL(278);
         end;
 
 48     :case verb of
   45,51,2:if(random(3)=2)and(noun<>35)then begin RS(38);moveto(47)end
           else if(noun<>35)then RL(279);
-   43..50:RL(279);
+   43,44,46..50:RL(279);
      14  :if(noun in[27,1])and(27 in p[48])then
            begin Sc:=Sc+20;noun:=27;end;
      11 :if(noun=35)then RL(289)
@@ -1360,7 +1390,7 @@ end  {of case}
 else SA
 end; {of SP8}
 {-------------------}
-overlay procedure SpecialAnswers9;
+  procedure SpecialAnswers9;
 
 begin
 FlagSA:='r';
@@ -1447,7 +1477,7 @@ end  {of case}
 else SA
 end; {of SP9}
 {-------------------}
-overlay procedure SpecialAnswers10;
+  procedure SpecialAnswers10;
 
 begin
 FlagSA:='r';
@@ -1467,7 +1497,7 @@ Case Prm of
 
 58     :case verb of
    45,58:moveto(57);
-   43..51,20:if(en('i'))and(en('j'))and KeyHole then
+   43,44,46..51,20:if(en('i'))and(en('j'))and KeyHole then
          begin sound(38);RS(61);ShRm:=2;moveto(59);sound(20);
          for o:=0 to NMax do if(r[o]=58)then r[o]:=59;
          if not(en('S'))then begin Ev:=Ev+['S'];Sc:=Sc+60 end end else RL(325);
@@ -1480,7 +1510,7 @@ Case Prm of
    44,49:moveto(68);
    45,57:begin if not(en('w'))then begin Ev:=Ev+['w'];RL(346);end
                else begin RL(347);DEAD end end;
-   46..50:moveto(63);
+   46,48,50:moveto(63);
     58  :if(noun=Null)or(noun=65)then begin RL(342);DEAD;end;
     51  :begin sound(38);RL(344);delay(999);sound(20)end;
     52  :begin sound(30);RL(345);ShRm:=13;moveto(59);sound(20)end;
@@ -1508,7 +1538,7 @@ Case Prm of
     46  :begin RL(347);DEAD;end;
   43,48 :moveto(66);
   44,50 :moveto(68);
-  45..49:moveto(64);
+  47,49:moveto(64);
     58  :if(noun=Null)or(noun=65)then begin RL(342);DEAD;end;
     51  :begin sound(38);RL(344);delay(999);sound(20)end;
     52  :begin sound(30);RL(345);ShRm:=13;moveto(59);sound(20)end;
@@ -1520,7 +1550,7 @@ end  {of case}
 else SA
 end; {of SP10}
 {-------------------}
-overlay procedure SpecialAnswers11;
+  procedure SpecialAnswers11;
 
 begin
 FlagSA:='r';
@@ -1531,7 +1561,7 @@ Case Prm of
    45   :moveto(65);
    47   :moveto(66);
    49   :moveto(68);
-  43..50:RL(343);
+  43,44,46,48,50:RL(343);
     58  :if(noun=Null)or(noun=65)then begin RL(342);DEAD;end;
     51  :begin sound(38);RL(344);delay(999);sound(20)end;
     52  :begin sound(30);RL(345);ShRm:=13;moveto(59);sound(20)end;
@@ -1543,7 +1573,7 @@ Case Prm of
    46   :moveto(67);
    48   :moveto(66);
    50   :moveto(68);
-  43..50:RL(343);
+  43,44,45,47,49:RL(343);
     58  :if(noun=Null)or(noun=65)then begin RL(342);DEAD;end;
     51  :begin sound(38);RL(344);delay(999);sound(20)end;
     52  :begin sound(30);RL(345);ShRm:=13;moveto(59);sound(20)end;
@@ -1599,7 +1629,7 @@ end  {of case}
 else SA
 end; {of SP11}
 {-------------------}
-overlay procedure SpecialAnswers12;
+  procedure SpecialAnswers12;
 
 begin
 FlagSA:='r';
@@ -1630,7 +1660,7 @@ Case Prm of
              4:begin RL(18); moveto(11);end;
                47   :RL(17);
                 end;
-  43..52  :if FlasOff then RL(14);
+  43..46,48..52  :if FlasOff then RL(14);
    14  :if(noun in[70,1])and not(en('G'))then
          begin noun:=70;Ev:=Ev+['G'];Sc:=Sc+40;end;
    7   :if not(en('G'))then begin Ev:=Ev+['G'];RL(157);
@@ -1666,7 +1696,7 @@ end  {of case}
 else SA
 end; {of SP12}
 {-------------------}
-overlay procedure SpecialAnswers13;
+  procedure SpecialAnswers13;
 
 begin
 FlagSA:='r';
@@ -1748,7 +1778,7 @@ end  {of case}
 else SA
 end; {of SP13}
 {-------------------}
-overlay procedure SpecialAnswers14;
+  procedure SpecialAnswers14;
 
 begin
 FlagSA:='r';
@@ -1761,7 +1791,7 @@ Case Prm of
   45..50:RL(291);
     11  :if(noun in[26,50])then RL(292);
     2   :if(noun=72)then RL(312);
-    11  :if(noun=72)then RL(313);
+    12  :if(noun=72)then RL(313);
         end;
 
 59     :case verb of
@@ -1812,17 +1842,47 @@ end; {of SP14}
 {===================}
 procedure ScreenDraw_PlayerInput;
   begin
-   gotoxy(1,23);writeln;TextColor(m5);write(chr(175),' ');
-   Window(1,1,80,25);
-   gotoxy(1,1);textcolor(m4);TextBackGround(m6);
-   gotoxy(10,1); writeln(Tic,'  '); gotoxy(75,1); writeln(Sc,' ');
-   gotoxy(35-(length(Loc)div 2),1);writeln('     ',Loc,'     ');
-   gotoxy(3,25);TextBackGround(0);Window(1,2,80,25);
-   textcolor(m1);BufLen:=77;
-   if(Loc<>'Civilization!')then READLN(LINE)else repeat;until false;
-   if(Line='r')or(Line='repeat')then Line:=Again
+   gotoxy(1,23);
+   writeln;
+   TextColor(m5);
+   write(chr(175),' ');
+
+   {Window(1,1,80,25);}
+
+   gotoxy(1,1);
+   textcolor(m4);
+   TextBackGround(m6);
+
+   gotoxy(10,1);
+   writeln(Tic,'  ');
+
+   gotoxy(20,1);
+   writeln(Sc,' ');
+
+   gotoxy(35-(length(Loc)div 2),1);
+   writeln('     ',Loc,'     ');
+
+
+   gotoxy(2,24);
+   TextBackGround(0);
+   Window(1,2,80,25);
+   textcolor(m1);
+
+   {BufLen:=77;}
+   if(Loc<>'Civilization!')then
+        READLN(LINE)
+        else repeat;
+        until false;
+   if(Line='r') or (Line='repeat') then Line:=Again
    else Again:=Line;
-   gotoxy(1,23);TextColor(m3);writeln(chr(175));TextColor(m2);
+
+
+
+   TextColor(m3);
+   writeln(chr(175));
+   TextColor(m2);
+
+
   end;
 {-------------------}
 
@@ -1830,17 +1890,29 @@ procedure ScreenDraw_PlayerInput;
 BEGIN
 clrscr;
 assign0;
-assign1;assign2;assign3;assign4;assign5;assign6;assign7;assign8;
+assign1;
+assign2;
+assign3;
+assign4;
+assign5;
+assign6;
+assign7;
+assign8;
 Initialize;
 
                             {*****} repeat {*****}
 
-if Skip then Time; writeln;
+if Skip then Time;
+{writeln;}
 
 if(length(Line)=0)then begin
  ScreenDraw_PlayerInput;
  while pos(' then ',Line)>0 do
-  begin x:=pos('then ',Line);delete(Line,x,4);insert('.',Line,x)end;
+  begin
+   x:=pos('then ',Line);
+   delete(Line,x,4);
+   insert('.',Line,x)
+  end;
  LowerCase(Line);
  Format(Line);
  Chop(Line);
@@ -1856,8 +1928,12 @@ end else
  end;
 Input:=Input+' ';
 while pos(' it ',Input)>0 do
- begin x:=pos(' it ',Input)+1;delete(Input,x,2);insert(LastNoun,Input,x);
- Format(Input);Chop(Input)end;
+ begin
+ x:=pos(' it ',Input)+1;
+ delete(Input,x,2);
+ insert(LastNoun,Input,x);
+ Format(Input);Chop(Input);
+ end;
 if(Input[length(Input)]=' ')then delete(Input,length(Input),1);
 
 
@@ -1902,4 +1978,3 @@ if Flag = 'g' then
                          {*****} until False {*****}
 
 END. {of program}
-

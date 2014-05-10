@@ -1,21 +1,46 @@
 {//-------------------------------------------------------------------------}
 {/*                                                                         }
+{Copyright (C) 2014 Jason Self <j@jxself.org>                               }
+{                                                                           }
+{This file is free software: you may copy, redistribute and/or modify it    }
+{under the terms of the GNU Affero General Public License as published by   }
+{the Free Software Foundation, either version 3 of the License, or (at your }
+{option) any later version.                                                 }
+{                                                                           }
+{This file is distributed in the hope that it will be useful, but WITHOUT   }
+{ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or      }
+{FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License}
+{for more details.                                                          }
+{                                                                           }
+{You should have received a copy of the GNU Affero General Public License   }
+{along with this program; if not, see https://gnu.org/licenses or write to: }
+{  Free Software Foundation, Inc.                                           }
+{  51 Franklin Street, Fifth Floor                                          }
+{  Boston, MA 02110-1301                                                    }
+{  USA                                                                      }
+{                                                                           }
+{This file incorporates work covered by the following copyright and         }
+{permission notice:                                                         }
+{                                                                           }
 {Copyright (C) 1990, 2009 - Apogee Software, Ltd.                           }
 {                                                                           }
-{This file is part of Supernova.  Supernova is free software; you can       }
-{redistribute it and/or modify it under the terms of the GNU General Public }
-{License as published by the Free Software Foundation; either version 3     }
-{of the License, or (at your option) any later version.                     }
+{This file is part of Beyond The Titanic. Beyond The Titanic is free        }
+{software; you can redistribute it and/or modify it under the terms of the  }
+{GNU General Public License as published by the Free Software Foundation;   }
+{either version 3 of the License, or (at your option) any later version.    }
 {                                                                           }
-{This program is distributed in the hope that it will be useful,            }
-{but WITHOUT ANY WARRANTY; without even the implied warranty of             }
-{MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                       }
+{This program is distributed in the hope that it will be useful, but WITHOUT}
+{ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or      }
+{FITNESS FOR A PARTICULAR PURPOSE.                                          }
 {                                                                           }
 {See the GNU General Public License for more details.                       }
 {                                                                           }
 {You should have received a copy of the GNU General Public License          }
-{along with this program; if not, write to the Free Software                }
-{Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.}
+{along with this program; if not, write to:                                 }
+{  Free Software Foundation, Inc.                                           }
+{  51 Franklin Street, Fifth Floor                                          }
+{  Boston, MA 02110-1301                                                    }
+{  USA                                                                      }
 {                                                                           }
 {Original Source: 1990 Scott Miller                                         }
 {Prepared for public release: 03/19/09 - Joe Siegler, Apogee Software, Ltd. }
@@ -31,17 +56,25 @@
 
 procedure  RR(RoomNum : integer);
     begin FlagSA:='s';
-      seek(rooms1,RoomNum);seek(rooms2,RoomNum);
-      READ(rooms1,text1);READ(rooms2,text2);
-      writeln(text1,text2);
+    reset(rooms1);
+    seek(rooms1,RoomNum);
+    reset(rooms2);
+    seek(rooms2,RoomNum);
+    READ(rooms1,text1);
+    READ(rooms2,text2);
+    {window(1,1,25,80);}
+    writeln(text1,text2);
     end; {of RoomRead}
 
 
 procedure  RS(RoomNum : integer);
    begin
+{   writeln('RS');   }
      FlagSA:='s';
-     seek(Special1,RoomNum);seek(Special2,RoomNum);
-     READ(Special1,text1);READ(Special2,text2);
+     seek(Special1,RoomNum);
+     seek(Special2,RoomNum);
+     READ(Special1,text1);
+     READ(Special2,text2);
      writeln(text1,text2);
    end;  {of SpecialRead}
 
@@ -356,4 +389,3 @@ procedure Check(var SepWord : Str14);
   end;  {of Check}
 
 {***************************** END OF ADPARSER ******************************}
-

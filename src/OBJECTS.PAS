@@ -1,21 +1,46 @@
 {//-------------------------------------------------------------------------}
 {/*                                                                         }
+{Copyright (C) 2014 Jason Self <j@jxself.org>                               }
+{                                                                           }
+{This file is free software: you may copy, redistribute and/or modify it    }
+{under the terms of the GNU Affero General Public License as published by   }
+{the Free Software Foundation, either version 3 of the License, or (at your }
+{option) any later version.                                                 }
+{                                                                           }
+{This file is distributed in the hope that it will be useful, but WITHOUT   }
+{ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or      }
+{FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License}
+{for more details.                                                          }
+{                                                                           }
+{You should have received a copy of the GNU Affero General Public License   }
+{along with this program; if not, see https://gnu.org/licenses or write to: }
+{  Free Software Foundation, Inc.                                           }
+{  51 Franklin Street, Fifth Floor                                          }
+{  Boston, MA 02110-1301                                                    }
+{  USA                                                                      }
+{                                                                           }
+{This file incorporates work covered by the following copyright and         }
+{permission notice:                                                         }
+{                                                                           }
 {Copyright (C) 1990, 2009 - Apogee Software, Ltd.                           }
 {                                                                           }
-{This file is part of Supernova.  Supernova is free software; you can       }
-{redistribute it and/or modify it under the terms of the GNU General Public }
-{License as published by the Free Software Foundation; either version 3     }
-{of the License, or (at your option) any later version.                     }
+{This file is part of Beyond The Titanic. Beyond The Titanic is free        }
+{software; you can redistribute it and/or modify it under the terms of the  }
+{GNU General Public License as published by the Free Software Foundation;   }
+{either version 3 of the License, or (at your option) any later version.    }
 {                                                                           }
-{This program is distributed in the hope that it will be useful,            }
-{but WITHOUT ANY WARRANTY; without even the implied warranty of             }
-{MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                       }
+{This program is distributed in the hope that it will be useful, but WITHOUT}
+{ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or      }
+{FITNESS FOR A PARTICULAR PURPOSE.                                          }
 {                                                                           }
 {See the GNU General Public License for more details.                       }
 {                                                                           }
 {You should have received a copy of the GNU General Public License          }
-{along with this program; if not, write to the Free Software                }
-{Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.}
+{along with this program; if not, write to:                                 }
+{  Free Software Foundation, Inc.                                           }
+{  51 Franklin Street, Fifth Floor                                          }
+{  Boston, MA 02110-1301                                                    }
+{  USA                                                                      }
 {                                                                           }
 {Original Source: 1990 Scott Miller                                         }
 {Prepared for public release: 03/19/09 - Joe Siegler, Apogee Software, Ltd. }
@@ -27,7 +52,7 @@
 {*  This include file to AdGame initializes all of the immoveable objects.   *}
 {*                         Copyright 1984 Pending                            *}
 {*****************************************************************************}
-overlay procedure Assign0;
+procedure Assign0;
 begin
                       {INITIALIZE OBJECT'S ROOMS}
 for o:=0 to NMax do r[o]:=Null;
@@ -81,7 +106,7 @@ p[46]:=[41,19];
 p[47]:=[3,41,19,17,22];
 p[48]:=[3,19,17,22,27,35];
 p[49]:=[9,26,37,72];
-p[50]:=[9,26,88,46,66,37,88,68];
+p[50]:=[9,26,88,46,66,37,68];
 p[51]:=[9,37];
 p[52]:=[9,37];
 p[53]:=[9,69,37];
@@ -108,4 +133,3 @@ p[76]:=[26,45];
 for x:=0 to 76 do p[x]:=p[x]+[15,30,42,44,50,56,60,79]
 end;
 {****************************** END OF OBJECTS *******************************}
-
