@@ -1,5 +1,27 @@
 {//-------------------------------------------------------------------------}
 {/*                                                                         }
+{Copyright (C) 2014 Jason Self <j@jxself.org>                               }
+{                                                                           }
+{This file is free software: you may copy, redistribute and/or modify it    }
+{under the terms of the GNU Affero General Public License as published by   }
+{the Free Software Foundation, either version 3 of the License, or (at your }
+{option) any later version.                                                 }
+{                                                                           }
+{This file is distributed in the hope that it will be useful, but WITHOUT   }
+{ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or      }
+{FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License}
+{for more details.                                                          }
+{                                                                           }
+{You should have received a copy of the GNU Affero General Public License   }
+{along with this program; if not, see https://gnu.org/licenses or write to: }
+{  Free Software Foundation, Inc.                                           }
+{  51 Franklin Street, Fifth Floor                                          }
+{  Boston, MA 02110-1301                                                    }
+{  USA                                                                      }
+{                                                                           }
+{This file incorporates work covered by the following copyright and         }
+{permission notice:                                                         }
+{                                                                           }
 {Copyright (C) 1990, 2009 - Apogee Software, Ltd.                           }
 {                                                                           }
 {This file is part of Supernova.  Supernova is free software; you can       }
@@ -28,6 +50,9 @@ program
     'special1' and 'special2'.  If a description exceeds 240 letters (Max),
        then the file 'special2' is used.  Otherwise 'special2' = ''.}
                {This program has the line edit feature!}
+
+uses Crt, Printer;
+
 const
   Max = 240;
 
@@ -77,8 +102,9 @@ text1, text2 : descriptionlength;
             highvideo;
           end;
       end;
-    close(special1); close(special2);
+
     write('The file contains ',filesize(special1),' special responces.');
+    close(special1); close(special2);
   end;  {End of Diskread.}
 
 procedure Beep;
@@ -93,7 +119,7 @@ repeat          {Main loop.}
 
 writeln;
 writeln('Do you want to R)ead or W)rite?');
-read(kbd,answer);
+readln(answer);
 if upcase(answer) <> 'R' then       {Write to 'Special' files.}
     begin
       writeln;writeln;
@@ -105,11 +131,12 @@ if upcase(answer) <> 'R' then       {Write to 'Special' files.}
               '  ''\''-Ends string.');
       lowvideo;
         repeat
-          read(trm,letter);
+          letter := ReadKey;
+          write(letter);
           if letter = ^h then
             begin
-              write(^h,' ',^h);
-              delete(text1,length(text1),2);
+              write(' ',^h);
+              delete(text1,length(text1),1);
             end;
           beep;
           if (letter <> '\') and (letter <> ^h) then text1:=text1+letter
@@ -128,11 +155,12 @@ if upcase(answer) <> 'R' then       {Write to 'Special' files.}
             writeln('String #1 is full!  Now writing to string #2.',^g);
             lowvideo;
               repeat
-                read(trm,letter);
+                letter := ReadKey;
+                write(letter);
                 if letter = ^h then
                   begin
-                    write(^h,' ',^h);
-                    delete(text2,length(text2),2);
+                    write(' ',^h);
+                    delete(text2,length(text2),1);
                   end;
                 beep;
                 if (letter <> '\') and (letter <> ^h) then text2:=text2+letter
@@ -150,13 +178,13 @@ else                      {Read from 'Rooms'.}
   begin
     writeln;writeln;
     writeln('To the S)creen or the P)rinter?');
-    read(kbd,answer);
+    readln(answer);
     if(upcase(answer)='P')then List:=True else List:=False;
     assign(special1,'special1');
     reset(special1);
     writeln('Filesize = ',filesize(special1),
             '  (From 0 to ',filesize(special1)-1,')');
-    close(special1);
+
     writeln('Enter starting position:');
     readln(start);
     if(start > filesize(special1)-5)then stop:=(filesize(special1)-1) else
@@ -165,12 +193,10 @@ else                      {Read from 'Rooms'.}
         readln(stop);
       end;
     Diskread(start,stop);
+
   end;  {End of else clause.}
 writeln;writeln('Another special responce?  Y)es or N)o');
-read(kbd,answer);
+readln(answer);
 until upcase(answer) = 'N';     {End of Main loop.}
 writeln; writeln(^g,'You are now out of the program.')
 END.
-
-
-
