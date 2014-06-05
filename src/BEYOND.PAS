@@ -426,8 +426,8 @@ CASE VERB OF
              flag:=ReadKey;if(upcase(flag)<>'N')then SAVE else writeln('No.');
              write('Are you still sure you want to quit? ');
              flag:=ReadKey;if(upcase(flag)='Y')then
-              begin RL(367);delay(999);window(1,1,80,25);clrscr;close(rooms1);
-               close(rooms2);close(special1);close(special2);close(line1);
+              begin RL(367);delay(999);window(1,1,80,25);clrscr;
+               // close(rooms1); close(rooms2);close(special1);close(special2);close(line1);
               HALT end else RL(264)end;
 53         :if(Prm in[27,30])then RL(123) else RL(145);
 59         :If(noun=23)then RL(368)else Diagnose;
@@ -786,10 +786,13 @@ CASE VERB OF
 
 61         :begin RL(245);flag:=ReadKey;
              if(upcase(flag)<>'N')then
-              begin RL(380);delay(999);window(1,1,80,25);clrscr;close(rooms1);
-               close(rooms2);close(special1);close(special2);close(line1);
-               assign(rooms1,'BEYOND.com');
-               {execute(rooms1)}
+              begin RL(380);delay(999);window(1,1,80,25);clrscr;
+               close(rooms1);
+               close(rooms2);
+               close(special1);
+               close(special2);
+               close(line1);
+               SysUtils.ExecuteProcess('beyond', '', []);
                end
              else RL(264)
             end;
@@ -1843,7 +1846,7 @@ end; {of SP14}
 procedure ScreenDraw_PlayerInput;
   begin
    gotoxy(1,23);
-   writeln;
+   writeln();
    TextColor(m5);
    write(chr(175),' ');
 

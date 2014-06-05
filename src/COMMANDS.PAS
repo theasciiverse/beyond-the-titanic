@@ -65,8 +65,12 @@ function En(c : char) : boolean;
 
 function Here(noun : integer): Boolean;
    begin
-     if(noun in Inven)or(r[noun]=Prm)or(noun in p[Prm])then Here:=True
-     else Here:=False
+     if(noun=-1) then Here:=False
+     else
+       begin
+         if(noun in Inven)or(r[noun]=Prm)or(noun in p[Prm])then Here:=True
+         else Here:=False;
+       end;
    end;
 
 procedure Crazy;
@@ -99,8 +103,7 @@ procedure DEAD;
      if(upcase(flag)<>'N')then
       begin
        writeln('Restarting...');window(1,1,80,25);
-       assign(rooms1,'BEYOND.com');
-       { execute(rooms1); }
+       SysUtils.ExecuteProcess('beyond', '', []);
        end
      else
       begin
@@ -569,7 +572,7 @@ procedure Initialize;
    writeln('But first, two simple questions:');
    gotoxy(1,4);write('Are you using a COLOR screen (Y/N)? ');
    nosound; play(72,80,45);
-   flag:='Y'; play(2500,2490,6);
+   flag:='N'; play(2500,2490,6);
    m0:=20;m1:=14;m2:=11;m3:=4;m4:=15;m5:=28;m6:=1;m7:=4;m8:=10;m9:=10;
    if upcase(flag)='N' then
     begin
