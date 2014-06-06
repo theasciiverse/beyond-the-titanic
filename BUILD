@@ -9,6 +9,12 @@ fpc src/BEYOND.PAS
 
 The binary will be named BEYOND and stored in the src directory.
 
+Known Limitations:
+* You must change into the 'src' directory to successfully run the program.
+* You must set your terminal window to 80x24 for it to display correctly.
+
+These will likely be addressed in a future version.
+
 --
 Copyright (C) 2014 Jason Self <j@jxself.org>
 
