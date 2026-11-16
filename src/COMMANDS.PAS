@@ -141,7 +141,7 @@ procedure DEAD;
      if(upcase(flag)<>'N')then
       begin
        writeln('Restarting...');FullWindow;
-       SysUtils.ExecuteProcess('beyond', '', []);
+       AvRestart;
        end
      else
       begin
@@ -153,11 +153,7 @@ procedure DEAD;
        writeln('A Scott Miller Production');
        writeln('    Have a nice day...');
        delay(2000);
-       assign(FileName,'MENU.COM');
-       {$I-}
-       {execute(FileName);}
-       {$I+}
-       if IOResult <> 0 then HALT;
+       AvQuit(0);
       end
    end;
 

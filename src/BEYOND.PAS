@@ -794,7 +794,7 @@ CASE VERB OF
                close(special1);
                close(special2);
                close(line1);
-               SysUtils.ExecuteProcess('beyond', '', []);
+               AvRestart;
                end
              else RL(264)
             end;
@@ -1857,8 +1857,7 @@ procedure ScreenDraw_PlayerInput;
    {BufLen:=77;}
    if(Loc<>'Civilization!')then
         begin LINE:=AvReadLine(77,true);writeln end
-        else repeat;
-        until false;
+        else begin flag:=ReadKey;AvQuit(0) end;
    if(Line='r') or (Line='repeat') then Line:=Again
    else Again:=Line;
 
