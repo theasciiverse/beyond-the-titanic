@@ -585,34 +585,29 @@ procedure Initialize;
   writeln(S);
  end;
   begin
-   textcolor(15);
-   writeln('Prepare to engage yourself in a most exciting adventure.');
-   writeln('But first, two simple questions:');
-   gotoxy(1,4);write('Are you using a COLOR screen (Y/N)? ');
-   nosound; play(72,80,45);
-   flag:='N'; play(2500,2490,6);
+   { Asciiverse: the two questions the game asked first (a colour screen?
+     how many disk drives?) are answered for the player: colour, unless
+     NO_COLOR is set, and no disks to swap }
+   nosound;
+   if AvNoColor then flag:='N' else flag:='Y';
    m0:=20;m1:=14;m2:=11;m3:=4;m4:=15;m5:=28;m6:=1;m7:=4;m8:=10;m9:=10;
    if upcase(flag)='N' then
     begin
-     writeln('No, I don''t have a color screen.');
      m0:=31;m1:=15;m2:=15;m3:=7;m4:=0;m5:=31;m6:=7;m7:=8;m8:=7;m9:=0;
-    end else writeln('Yes, I do have a color screen.');writeln;
-   write('How many disk drives do you have (1/2)? ');
-   play(80,88,30);
-   flag:='2';play(2500,2490,6);
-   Drive:='B:';
-   if(upcase(flag)='O')or(flag='1')then
-    begin Drive:='A:';writeln('I have ONE disk drive.')end else
-    writeln('I have TWO disk drives.');
-   delay(999);clrscr;textcolor(15);gotoxy(1,5);writeln;textcolor(7);
+    end;
+   Drive:='';
+   clrscr;textcolor(15);gotoxy(1,5+(ScreenHeight-25)div 2);writeln;textcolor(7);
    cn('Beyond the Titanic');textcolor(6);cn('------------------');writeln;
    textcolor(7);
    cn('A Text & Sound Adventure Fantasy');writeln;writeln;
    cn('An Apogee Software Production');writeln;writeln;writeln;
    cn('Written and Programmed by Scott Miller');
    textcolor(11);
-   gotoxy(32,24);textcolor(7);
-   write('Press any key...');{flag:=ReadKey;}clrscr;
+   gotoxy((ScreenWidth div 2)-8,24+(ScreenHeight-25)div 2);textcolor(7);
+   CursorOff;write('Press any key...');flag:=ReadKey;CursorOn;clrscr;
+   { the shareware screen that came next asked for $5 or $10 by cheque;
+     Apogee ended registration, so it is left out }
+   (*
 
    {                      *** SHAREWARE SCREEN ***                            }
 
@@ -647,6 +642,7 @@ procedure Initialize;
    {flag:=ReadKey;}
    while keypressed do flag:=ReadKey;
    clrscr;
+   *)
    {                      ************************                            }
    Loc:='';Tic:=0;Sc:=0;
    AvOnResize:=@Resized;
