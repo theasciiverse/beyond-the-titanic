@@ -152,6 +152,8 @@ var
      Back,
      KeyHole,
      Verbose        : boolean;
+     DataDir,              { Asciiverse: the data files, beside the program, }
+     StateDir       : string; { and saved games, in the state folder }
 
 
 
@@ -1873,6 +1875,8 @@ procedure ScreenDraw_PlayerInput;
 
 
 BEGIN
+DataDir:=AvDataDir;
+StateDir:=AvStateDir('beyond-the-titanic');
 clrscr;
 assign0;
 assign1;

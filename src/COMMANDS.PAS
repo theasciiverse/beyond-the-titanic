@@ -298,26 +298,45 @@ if((en('a'))and(here(29)))or not(Prm in [6..24])then begin
     else RL(54)
    end;  {of DescribeRm}
 
+{ Asciiverse: saved games are kept in the player's state folder, so there
+  is no SAVE/RESTORE disk to put in a drive: the game asks for a name, up to
+  eight letters and digits, and saves or restores at once }
+procedure SaveName(Prompt : Str80);
+   var i : integer;
+       Clean : Str80;
+   begin
+     write(Prompt);
+     input:=AvReadLine(8,false);writeln;
+     Clean:='';
+     for i:=1 to length(input) do
+      if upcase(input[i]) in['A'..'Z','0'..'9','-','_'] then Clean:=Clean+input[i];
+     input:=Clean;
+     if(input='')then input:='LastRoom';
+   end;
+
+procedure SavedGames;
+   var Found : TSearchRec;
+       Names : string;
+   begin
+     Names:='';
+     if FindFirst(StateDir+'*.a',faAnyFile,Found)=0 then
+      begin
+       repeat
+        if length(Names)<200 then
+         begin
+          if Names<>'' then Names:=Names+', ';
+          Names:=Names+ChangeFileExt(Found.Name,'');
+         end;
+       until FindNext(Found)<>0;
+       FindClose(Found);
+      end;
+     if Names<>'' then writeln('Saved games: ',Names,'.');
+   end;
+
 procedure SAVE;
-   begin SA; for x:=1 to 24 do writeln; nosound;
-   Window(1,3,ScreenWidth,ScreenHeight);
-   gotoxy(1,4);
-   if(Drive='A:')then
-    writeln('Remove the GAME disk and insert your SAVE/RESTORE disk ',
-            'in drive A:')else
-    writeln('Make sure your SAVE/RESTORE disk is in drive B:');
-   writeln('  (Press any key to continue...)');flag:=ReadKey;
-   writeln;writeln;
-   write('Save under what name? ');
-   {BufLen:=8;}
-   readln(input);
-   while pos(' ',input)>0 do delete(input,pos(' ',input),1);
-   while pos('.',input)>0 do delete(input,pos('.',input),1);
-   if(input='')then input:='LastRoom';
-   writeln;writeln;input:=Drive+input;
-   writeln('If your SAVE/RESTORE disk is in drive ',Drive,
-            ' then press any key to start.');
-   flag:=ReadKey;
+   begin SA; nosound;
+   writeln;
+   SaveName('Save under what name? ');
    with DiskSave do
     begin
      aInven:=Inven;aKitSet:=KitSet;aCabiSet:=CabiSet;aPanelCon:=PanelCon;
@@ -325,15 +344,15 @@ procedure SAVE;
      aYearDial:=YearDial;aPrm:=Prm;aMnRm:=MnRm;aSc:=Sc;aShots:=Shots;
      aShRm:=ShRm;aRx:=Rx;aEv:=Ev;aCode:=Code;aLoc:=Loc;aKeyHole:=KeyHole;
     end;
-   assign(GameSave,input+'.a');
+   assign(GameSave,StateDir+input+'.a');
    rewrite(GameSave);
    write(GameSave,DiskSave);
    close(GameSave);
-   assign(Objects,input+'.b');
+   assign(Objects,StateDir+input+'.b');
    rewrite(Objects);
    for x:=0 to RMax do write(Objects,p[x]);
    close(Objects);
-   assign(WordList,input+'.c');
+   assign(WordList,StateDir+input+'.c');
    rewrite(Wordlist);
    for x:= 0 to NMax do
     for y:= 1 to 5 do
@@ -342,55 +361,34 @@ procedure SAVE;
     for y:= 1 to 5 do
      write(WordList,v[x,y]);
    close(WordList);
-   assign(Things,input+'.d');
+   assign(Things,StateDir+input+'.d');
    rewrite(Things);
    for x:= 0 to NMax do write(Things,r[x]);
    close(Things);
-   writeln; delete(input,1,2);
+   AvLog('saved: '+input);
    writeln('Your present game location is now',
-           ' SAVED to disk under the name ''',input,'.''');
-   if(Drive='A:')then begin writeln;
-    writeln('Remove the SAVE/RESTORE disk and insert your GAME disk.')end;
-   writeln('  (Press any key to continue...)');flag:=ReadKey;
-   writeln;writeln;
+           ' SAVED under the name ''',input,'.''');
+   writeln;
    if(Verb<>54)then writeln('You may now resume your game...');
    if(Line='')then Line:='look';Tic:=Tic-2;Back:=True;
    if(Prm in[59..68])then sound(20);
-   MainWindow
    end; {of Save}
 
 procedure RESTORE;
  function Exist:Boolean;
  begin
- assign(GameSave,input+'.a');
+ assign(GameSave,StateDir+input+'.a');
  {$I-}
  Reset(GameSave);
  {$I+}
  Exist:=(IOresult=0)
  end;
-   begin SA; for x:=1 to 24 do writeln; nosound;
-   Window(1,3,ScreenWidth,ScreenHeight);gotoxy(1,4);
-   if(Drive='A:')then
-    writeln('Remove the GAME disk and insert your SAVE/RESTORE disk ',
-            'in drive ',Drive)else
-    writeln('Make sure your SAVE/RESTORE disk is in drive B:');
-   writeln('  (Press any key to continue...)');flag:=ReadKey;
-   writeln;writeln;
-   write('Which file name do you want to RESTORE? ');
-   {BufLen:=8;}
-   readln(input);
-   while pos(' ',input)>0 do delete(input,pos(' ',input),1);
-   while pos('.',input)>0 do delete(input,pos('.',input),1);
-   if(input='')then input:='LastRoom';
-   writeln;writeln;input:=Drive+input;
-   writeln('If your SAVE/RESTORE disk is now in drive ',Drive,
-           ' then press any key to start.');
-   flag:=ReadKey;
+   begin SA; nosound;
+   writeln;
+   SavedGames;
+   SaveName('Which name do you want to RESTORE? ');
    if Exist then
     begin
-     close(GameSave);
-     assign(GameSave,input+'.a');
-     reset(GameSave);
      read(GameSave,DiskSave);
      close(GameSave);
      with DiskSave do
@@ -400,11 +398,11 @@ procedure RESTORE;
        YearDial:=aYearDial;Prm:=aPrm;MnRm:=aMnRm;Sc:=aSc;Shots:=aShots;
        ShRm:=aShRm;Rx:=aRx;Ev:=aEv;Code:=aCode;Loc:=aLoc;KeyHole:=aKeyHole;
       end;
-     assign(Objects,input+'.b');
+     assign(Objects,StateDir+input+'.b');
      reset(Objects);
      for x:=0 to RMax do read(Objects,p[x]);
      close(Objects);
-     assign(WordList,input+'.c');
+     assign(WordList,StateDir+input+'.c');
      reset(Wordlist);
      for x:= 0 to NMax do
       for y:= 1 to 5 do
@@ -413,31 +411,22 @@ procedure RESTORE;
       for y:= 1 to 5 do
        read(WordList,v[x,y]);
      close(WordList);
-     assign(Things,input+'.d');
+     assign(Things,StateDir+input+'.d');
      reset(Things);
      for x:= 0 to NMax do read(Things,r[x]);
      close(Things);
-     writeln; delete(input,1,2);
+     AvLog('restored: '+input);
      writeln('Your previously SAVED game location is now',
-             ' RESTORED from the file ''',input,'.''');
-     if(Drive='A:')then begin writeln;
-      writeln('Remove the SAVE/RESTORE disk and insert your GAME disk.')end;
-     writeln('  (Press any key to continue...)');flag:=ReadKey;
+             ' RESTORED from ''',input,'.''');
     end
    else
-    begin writeln;TextColor(28);
-     writeln('             That name does not exist on this',
-             ' SAVE/RESTORE disk.',^g);
-     TextColor(m2);writeln;
-     if(Drive='A:')then
-      writeln('Put your GAME disk back in the disk drive and press any key.')
-     else writeln('  (Press any key to continue...)');
-     flag:=ReadKey;
+    begin TextColor(28);
+     writeln('There is no saved game under the name ''',input,'.''');
+     TextColor(m2);
     end;
-   writeln;writeln;writeln('You may now resume you game...');
+   writeln;writeln('You may now resume you game...');
    if(Line='')then Line:='look';Tic:=Tic-2;Back:=True;
    if(Prm in[59..68])then sound(20);
-   MainWindow
    end; {of Restore}
 
 procedure Vanish(o : integer);
@@ -707,15 +696,13 @@ Verbose     :=true;
 Attack      :=False;
 YearDial    :=135;
 DayDial     :=60;
-assignfile(rooms1,'ROOMS1');
-assignfile(rooms2,'ROOMS2');
-assignfile(special1,'SPECIAL1');
-assignfile(special2,'SPECIAL2');
-assignfile(line1,'LINE');
-
-getdir(0,S);
-chdir(S);
-{Writeln ('Current directory is : ',S);}
+if not FileExists(DataDir+'ROOMS1') then
+  AvFatal('Beyond the Titanic cannot find its data files (ROOMS1 and the rest) in '+DataDir);
+assignfile(rooms1,DataDir+'ROOMS1');
+assignfile(rooms2,DataDir+'ROOMS2');
+assignfile(special1,DataDir+'SPECIAL1');
+assignfile(special2,DataDir+'SPECIAL2');
+assignfile(line1,DataDir+'LINE');
 
 
 {$I+}
