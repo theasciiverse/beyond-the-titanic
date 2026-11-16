@@ -62,8 +62,7 @@ procedure  RR(RoomNum : integer);
     seek(rooms2,RoomNum);
     READ(rooms1,text1);
     READ(rooms2,text2);
-    {window(1,1,25,80);}
-    writeln(text1,text2);
+    AvShowText(text1,text2,80);
     end; {of RoomRead}
 
 
@@ -75,7 +74,7 @@ procedure  RS(RoomNum : integer);
      seek(Special2,RoomNum);
      READ(Special1,text1);
      READ(Special2,text2);
-     writeln(text1,text2);
+     AvShowText(text1,text2,80);
    end;  {of SpecialRead}
 
 procedure RL(RoomNum : integer);
@@ -84,7 +83,7 @@ procedure RL(RoomNum : integer);
      FlagSA:='s';
      seek(Line1,RoomNum);
      READ(Line1,text1);
-     writeln(text1);
+     AvShowText(text1,'',80);
    end;  {of LineRead}
 
 
