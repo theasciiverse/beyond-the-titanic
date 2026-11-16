@@ -191,6 +191,8 @@ var
   Started: Boolean = False;
   Restored: Boolean = False;
   Paged: Integer = 0;                 { rows paged back, 0 when not }
+  EditActive: Boolean = False;        { the line editor's text, taken out }
+  EditX, EditY, EditLen: Integer;     { of the grid before a resize }
 {$IFDEF UNIX}
   SavedTios: Termios;
   HaveTios: Boolean = False;
@@ -666,7 +668,8 @@ begin
   for I := 0 to N - 1 do
   begin
     C := P[I];
-    LogChar(C);
+    if not HasMain or ((WX1 = MX1) and (WY1 = MY1) and (WX2 = MX2) and (WY2 = MY2)) then
+      LogChar(C);
     case C of
       #10: begin SkipSpaces := False; NewLine(False); end;
       #13: begin PendingWrap := False; CurX := WX1; end;
@@ -961,7 +964,7 @@ begin
   for Y := MY1 to MY2 do PaintRow(Y, MX1, MX2);
 end;
 
-procedure CheckResize;
+function CheckResize: Boolean;
 var
   W, H, Y, X, N, OX1, OX2: Integer;
   OldRows: array of TStoredRow;
@@ -969,13 +972,25 @@ var
   WasMain: Boolean;
   SaveAttr: Byte;
 begin
+  Result := False;
   TermSize(W, H);
   if (W = ScreenWidth) and (H = ScreenHeight) then Exit;
+  Result := True;
   Paged := 0;
   WasMain := HasMain and (WX1 = MX1) and (WY1 = MY1) and (WX2 = MX2) and (WY2 = MY2);
   SaveX1 := WX1; SaveY1 := WY1; SaveX2 := WX2; SaveY2 := WY2;
   SaveCX := CurX; SaveCY := CurY;
   SaveAttr := TextAttr;
+  { the line being typed is drawn again by the editor, at its new place }
+  if EditActive then
+  begin
+    for X := EditX to EditX + EditLen - 1 do
+      if X <= Length(Grid[EditY - 1].Cells) then SetCell(X, EditY, ' ', TextAttr);
+    Grid[EditY - 1].Len := EditX - WX1;
+    CurX := EditX;
+    CurY := EditY;
+    PendingWrap := False;
+  end;
   { the main window's rows down to the cursor's row }
   SetLength(OldRows, 0);
   if HasMain then
@@ -1072,7 +1087,17 @@ begin
     { the row shown at Y: counted back from the bottom of the window }
     I := StoredCount + (Y - MY1) - Paged;
     TermGoto(MX1, Y);
-    if I < StoredCount then
+    if I >= StoredCount then
+    begin
+      { a row of the window, shown lower down }
+      for X := MX1 to MX2 do
+      begin
+        TermColor(Grid[MY1 + I - StoredCount - 1].Cells[X - 1].Attr);
+        Emit(Utf8Of(Grid[MY1 + I - StoredCount - 1].Cells[X - 1].Ch));
+      end;
+      TermX := -1;
+    end
+    else
     begin
       for X := MX1 to MX2 do
       begin
@@ -1088,9 +1113,7 @@ begin
         end;
       end;
       TermX := -1;
-    end
-    else
-      PaintRow(Y, MX1, MX2);
+    end;
   end;
   Note := ' Shift+PgUp, Shift+PgDn: page back and forth. Any other key: back to the game ';
   if Length(Note) > MX2 - MX1 + 1 then Note := ' paging back ';
@@ -1146,7 +1169,7 @@ begin
   Waited := 0;
   repeat
     if KeyQ <> '' then Exit;
-    CheckResize;
+    if CheckResize and EditActive then Exit;
     ShowCursor;
     if (TimeoutMS >= 0) and (TimeoutMS < 50) then
       PollKeys(TimeoutMS)
@@ -1279,7 +1302,7 @@ function KeyPressed: Boolean;
 begin
   if KeyQ = '' then
   begin
-    CheckResize;
+    if CheckResize then ;
     Flush;
     PollKeys(0);
   end;
@@ -1382,14 +1405,18 @@ begin
     if KeyQ = '' then
     begin
       I := ScreenWidth * 1000 + ScreenHeight;
-      { a resize redraws the story around the line: take it out first }
-      CurX := Pos0X;
-      ClrEol;
-      CurX := Pos0X + P;
+      EditActive := True;
+      EditX := Pos0X;
+      EditY := Pos0Y;
+      EditLen := Room;
       WaitKey(-1);
+      EditActive := False;
       if I <> ScreenWidth * 1000 + ScreenHeight then
+      begin
         Place;
-      Redraw;
+        Redraw;
+      end;
+      if KeyQ = '' then Continue;
     end;
     HideCursor;
     C := KeyQ[1];
