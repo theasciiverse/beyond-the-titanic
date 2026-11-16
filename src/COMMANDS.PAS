@@ -87,6 +87,11 @@ procedure DrawStatus;
      MainWindow;gotoxy(OldX,OldY);
    end;
 
+{ for the session log: how many things the player carries }
+function Carried : integer;
+   var o,c : integer;
+   begin c:=0; for o:=0 to NMax do if o in Inven then inc(c); Carried:=c end;
+
 procedure Resized;
    begin DrawStatus end;
 
@@ -124,6 +129,7 @@ procedure DEAD;
     var FileName : file;
     var x,b,c:Integer;
    begin SA; NoSound;
+     AvLog('died: move '+IntToStr(Tic)+', score '+IntToStr(Sc)+', room '+IntToStr(Prm));
      for x:=1 to 7 do writeln;
      Textcolor(1);TextBackground(m9);
      BannerRow(ScreenHeight-7,'*',true);
@@ -160,6 +166,7 @@ procedure DEAD;
 procedure Home;
   var b,c,x,y,o:Integer;
    begin SA;
+     AvLog('won: move '+IntToStr(Tic)+', score '+IntToStr(Sc));
      for x:=1 to 7 do writeln;
      Textcolor(25);Textbackground(m7);
      BannerRow(ScreenHeight-7,'#',true);

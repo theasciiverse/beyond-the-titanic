@@ -1852,6 +1852,9 @@ procedure ScreenDraw_PlayerInput;
    TextColor(m5);
    write(chr(175),' ');
    DrawStatus;
+   if AvLogging then
+    AvLog('turn: move '+IntToStr(Tic)+', score '+IntToStr(Sc)+', room '+
+          IntToStr(Prm)+' '+Loc+', carrying '+IntToStr(Carried));
    textcolor(m1);
 
    {BufLen:=77;}
@@ -1876,6 +1879,7 @@ procedure ScreenDraw_PlayerInput;
 BEGIN
 DataDir:=AvDataDir;
 StateDir:=AvStateDir('beyond-the-titanic');
+AvLogOpen('BEYOND_THE_TITANIC_LOG',StateDir,'beyond-the-titanic.log');
 clrscr;
 assign0;
 assign1;
