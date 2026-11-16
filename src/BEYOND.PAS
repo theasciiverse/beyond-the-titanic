@@ -1854,7 +1854,7 @@ procedure ScreenDraw_PlayerInput;
 
    {BufLen:=77;}
    if(Loc<>'Civilization!')then
-        READLN(LINE)
+        begin LINE:=AvReadLine(77,true);writeln end
         else repeat;
         until false;
    if(Line='r') or (Line='repeat') then Line:=Again
