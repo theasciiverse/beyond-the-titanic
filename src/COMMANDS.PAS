@@ -58,6 +58,48 @@
 procedure SA;
    begin FlagSA:='s' end;
 
+{ Asciiverse: the screen is the terminal's own size, the status bar on the
+  top row and the story in the window below it (80x25 on the PC) }
+procedure MainWindow;
+   begin AvSetMainWindow(1,2,ScreenWidth,ScreenHeight) end;
+
+procedure FullWindow;
+   begin Window(1,1,ScreenWidth,ScreenHeight) end;
+
+procedure DrawStatus;
+   var x,OldX,OldY : integer;
+       OldAttr : byte;
+   begin
+     OldX:=WhereX;OldY:=WhereY;OldAttr:=TextAttr;
+     Window(1,1,ScreenWidth,1);
+     TextBackGround(m6);TextColor(m4);
+     for x:=1 to ScreenWidth do write(' ');
+     gotoxy(4,1);write('Move');
+     gotoxy(10,1);write(Tic);
+     gotoxy(ScreenWidth-12,1);write('Score');
+     gotoxy(ScreenWidth-5,1);write(Sc);
+     if Loc<>'' then
+      begin
+       gotoxy((ScreenWidth div 2)-5-(length(Loc)div 2),1);
+       write('     ',Loc,'     ');
+      end;
+     TextAttr:=OldAttr;
+     MainWindow;gotoxy(OldX,OldY);
+   end;
+
+procedure Resized;
+   begin DrawStatus end;
+
+{ a row of the death and victory banners, the window's full width }
+procedure BannerRow(y : integer; c : char; Edge : boolean);
+   var x : integer;
+   begin
+     gotoxy(1,y);
+     for x:=1 to ScreenWidth do
+      if Edge or(x=1)or(x=ScreenWidth)then write(c) else write(' ');
+     writeln;
+   end;
+
 function En(c : char) : boolean;
    begin
      if(c in Ev)then En:=True else En:=False
@@ -82,34 +124,30 @@ procedure DEAD;
     var FileName : file;
     var x,b,c:Integer;
    begin SA; NoSound;
-     gotoxy(1,25);for x:=1 to 7 do writeln;
+     for x:=1 to 7 do writeln;
      Textcolor(1);TextBackground(m9);
-     gotoxy(1,18);
-     write('*********************************************************',
-           '***********************');writeln;
-     gotoxy(1,19); for x:=1 to 3 do
-     write('*                                                        ',
-             '                      *');writeln;
-     gotoxy(1,22);
-     write('*********************************************************',
-           '***********************');writeln;
-     TextColor(m0);gotoxy(32,20);writeln('YOU HAVE DIED!!!');
+     BannerRow(ScreenHeight-7,'*',true);
+     for x:=1 to 3 do BannerRow(ScreenHeight-7+x,'*',false);
+     BannerRow(ScreenHeight-3,'*',true);
+     TextColor(m0);gotoxy((ScreenWidth div 2)-8,ScreenHeight-5);
+     writeln('YOU HAVE DIED!!!');
      Textcolor(m2);Textbackground(0);
      for c:=700 downto 20 do
         for b:=70 downto 1 do sound(b*c);nosound;
      close(Rooms1);close(rooms2);close(special1);close(special2);close(line1);
-     gotoxy(1,23);DelLine;DelLine;writeln;write('Do you wish to play again? ');
+     gotoxy(1,ScreenHeight-2);DelLine;DelLine;writeln;
+     write('Do you wish to play again? ');
      flag:=ReadKey;
      if(upcase(flag)<>'N')then
       begin
-       writeln('Restarting...');window(1,1,80,25);
+       writeln('Restarting...');FullWindow;
        SysUtils.ExecuteProcess('beyond', '', []);
        end
      else
       begin
        textcolor(7);
        textbackground(0);
-       window(1,1,80,25);
+       FullWindow;
        clrscr;
        writeln('    Beyond the Titanic');
        writeln('A Scott Miller Production');
@@ -126,20 +164,15 @@ procedure DEAD;
 procedure Home;
   var b,c,x,y,o:Integer;
    begin SA;
-     gotoxy(1,25);for x:=1 to 7 do writeln;
+     for x:=1 to 7 do writeln;
      Textcolor(25);Textbackground(m7);
-     gotoxy(1,18);
-     write('#########################################################',
-           '#######################');writeln;
-     gotoxy(1,19); for x:=1 to 3 do
-     write('#                                                        ',
-             '                      #');writeln;
-     gotoxy(1,22);
-     write('#########################################################',
-           '#######################');writeln;
-     TextColor(31);gotoxy(25,20);writeln('Y O U   H A V E   W O N ! ! !');
+     BannerRow(ScreenHeight-7,'#',true);
+     for x:=1 to 3 do BannerRow(ScreenHeight-7+x,'#',false);
+     BannerRow(ScreenHeight-3,'#',true);
+     TextColor(31);gotoxy((ScreenWidth div 2)-15,ScreenHeight-5);
+     writeln('Y O U   H A V E   W O N ! ! !');
      Textcolor(m2);Textbackground(0);
-     gotoxy(1,23);DelLine;DelLine;writeln;
+     gotoxy(1,ScreenHeight-2);DelLine;DelLine;writeln;
      for x:=150 downto 1 do begin sound(x*55);delay(8);nosound;delay(20)end;
      if(Sc>1000)then Sc:=1000;
      write('You finished with a score of ',Sc,', which makes you a ');
@@ -267,7 +300,7 @@ if((en('a'))and(here(29)))or not(Prm in [6..24])then begin
 
 procedure SAVE;
    begin SA; for x:=1 to 24 do writeln; nosound;
-   window(1,3,80,25);
+   Window(1,3,ScreenWidth,ScreenHeight);
    gotoxy(1,4);
    if(Drive='A:')then
     writeln('Remove the GAME disk and insert your SAVE/RESTORE disk ',
@@ -323,7 +356,7 @@ procedure SAVE;
    if(Verb<>54)then writeln('You may now resume your game...');
    if(Line='')then Line:='look';Tic:=Tic-2;Back:=True;
    if(Prm in[59..68])then sound(20);
-   window(1,2,80,25)
+   MainWindow
    end; {of Save}
 
 procedure RESTORE;
@@ -336,7 +369,7 @@ procedure RESTORE;
  Exist:=(IOresult=0)
  end;
    begin SA; for x:=1 to 24 do writeln; nosound;
-   window(1,3,80,25);gotoxy(1,4);
+   Window(1,3,ScreenWidth,ScreenHeight);gotoxy(1,4);
    if(Drive='A:')then
     writeln('Remove the GAME disk and insert your SAVE/RESTORE disk ',
             'in drive ',Drive)else
@@ -404,7 +437,7 @@ procedure RESTORE;
    writeln;writeln;writeln('You may now resume you game...');
    if(Line='')then Line:='look';Tic:=Tic-2;Back:=True;
    if(Prm in[59..68])then sound(20);
-   window(1,2,80,25)
+   MainWindow
    end; {of Restore}
 
 procedure Vanish(o : integer);
@@ -563,7 +596,7 @@ procedure Initialize;
 
  procedure Cn(S : Str80);
  begin
-  gotoxy(40-(length(S)div 2),wherey);
+  gotoxy((ScreenWidth div 2)-(length(S)div 2),wherey);
   writeln(S);
  end;
   begin
@@ -630,8 +663,10 @@ procedure Initialize;
    while keypressed do flag:=ReadKey;
    clrscr;
    {                      ************************                            }
-   window(1,2,80,25);
-   gotoxy(1,1);
+   Loc:='';Tic:=0;Sc:=0;
+   AvOnResize:=@Resized;
+   MainWindow;DrawStatus;
+   gotoxy(1,ScreenHeight-1);
    TextColor(m1);
 cn('APRIL 14, 1912    11:43 PM');
 cn('You never knew the black canvas of the night was so full'+
@@ -699,20 +734,9 @@ Str(Random(9998)+1,Code);
    DescribeRm;
    writeln;
    randomize;
-   gotoxy(1,1);
-   TextBackGround(m6);
-   for x:=1 to 80 do write(' ');
-   writeln;
-   TextColor(m4);
-
-   gotoxy(4,1);
-   writeln('Move');
-
-   gotoxy(68,1);
-   writeln('Score');
    TextColor(m2);
    TextBackGround(0);
-   Window(1,2,80,25);
+   DrawStatus;
 
   end; {of Initialize}
 {***************************** END OF COMMANDS *****************************}

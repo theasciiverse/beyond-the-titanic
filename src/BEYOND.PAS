@@ -57,7 +57,7 @@
 
 { Last modified: July 23, 1987 }
 
-uses crt,sysutils;
+uses avcrt,sysutils;
 const
      Q        = '#';
      VMax     = 65;
@@ -426,7 +426,7 @@ CASE VERB OF
              flag:=ReadKey;if(upcase(flag)<>'N')then SAVE else writeln('No.');
              write('Are you still sure you want to quit? ');
              flag:=ReadKey;if(upcase(flag)='Y')then
-              begin RL(367);delay(999);window(1,1,80,25);clrscr;
+              begin RL(367);delay(999);FullWindow;clrscr;
                // close(rooms1); close(rooms2);close(special1);close(special2);close(line1);
               HALT end else RL(264)end;
 53         :if(Prm in[27,30])then RL(123) else RL(145);
@@ -786,7 +786,7 @@ CASE VERB OF
 
 61         :begin RL(245);flag:=ReadKey;
              if(upcase(flag)<>'N')then
-              begin RL(380);delay(999);window(1,1,80,25);clrscr;
+              begin RL(380);delay(999);FullWindow;clrscr;
                close(rooms1);
                close(rooms2);
                close(special1);
@@ -1845,30 +1845,11 @@ end; {of SP14}
 {===================}
 procedure ScreenDraw_PlayerInput;
   begin
-   gotoxy(1,23);
+   gotoxy(1,ScreenHeight-2);
    writeln();
    TextColor(m5);
    write(chr(175),' ');
-
-   {Window(1,1,80,25);}
-
-   gotoxy(1,1);
-   textcolor(m4);
-   TextBackGround(m6);
-
-   gotoxy(10,1);
-   writeln(Tic,'  ');
-
-   gotoxy(20,1);
-   writeln(Sc,' ');
-
-   gotoxy(35-(length(Loc)div 2),1);
-   writeln('     ',Loc,'     ');
-
-
-   gotoxy(2,24);
-   TextBackGround(0);
-   Window(1,2,80,25);
+   DrawStatus;
    textcolor(m1);
 
    {BufLen:=77;}
@@ -1881,6 +1862,7 @@ procedure ScreenDraw_PlayerInput;
 
 
 
+   gotoxy(1,ScreenHeight-2);
    TextColor(m3);
    writeln(chr(175));
    TextColor(m2);
