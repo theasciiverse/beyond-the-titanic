@@ -110,6 +110,11 @@ procedure AvLog(const S: string);
 function AvLogging: Boolean;
 { runs the game again from the start, in place of this process }
 procedure AvRestart;
+{ the current window's width and height }
+function AvWindowWidth: Integer;
+function AvWindowHeight: Integer;
+{ a line to print on the terminal's own screen when the game ends }
+procedure AvFarewell(const S: string);
 { restores the terminal and ends the program }
 procedure AvQuit(Code: Integer);
 { restores the terminal, prints Msg and ends the program with code 1 }
@@ -191,6 +196,7 @@ var
   Started: Boolean = False;
   Restored: Boolean = False;
   Paged: Integer = 0;                 { rows paged back, 0 when not }
+  Farewell: AnsiString = '';
   EditActive: Boolean = False;        { the line editor's text, taken out }
   EditX, EditY, EditLen: Integer;     { of the grid before a resize }
 {$IFDEF UNIX}
@@ -424,6 +430,7 @@ begin
   Restored := True;
   Flush;
   RawWrite(#27'[0m'#27'[?25h'#27'[?1049l');
+  if Farewell <> '' then RawWrite(Farewell);
 {$IFDEF UNIX}
   if HaveTios then TCSetAttr(0, TCSANOW, SavedTios);
 {$ENDIF}
@@ -1258,6 +1265,25 @@ begin
   HasMain := True;
 end;
 
+function AvWindowWidth: Integer;
+begin
+  Result := WX2 - WX1 + 1;
+end;
+
+function AvWindowHeight: Integer;
+begin
+  Result := WY2 - WY1 + 1;
+end;
+
+procedure AvFarewell(const S: string);
+begin
+{$IFDEF WINDOWS}
+  Farewell := Farewell + S + #13#10;
+{$ELSE}
+  Farewell := Farewell + S + #10;
+{$ENDIF}
+end;
+
 procedure AvSetWrap(On: Boolean);
 begin
   WrapOn := On;
@@ -1286,6 +1312,9 @@ begin
   HideCursor;
   Result := KeyQ[1];
   Delete(KeyQ, 1, 1);
+  if (Paged > 0) and not ((Result = #0) and (KeyQ <> '') and
+    (Ord(KeyQ[1]) in [kbBackUp, kbBackDown])) then
+    EndPaging;
   if (Result = #3) and (KeyQ = '') then AvQuit(0);
   if LogOpen then
   begin
